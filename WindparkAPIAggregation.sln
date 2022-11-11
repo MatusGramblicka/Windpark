@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIAggregation", "WindparkAPIAggregation\WindparkAPIAggregation.csproj", "{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIAggregation.Core", "WindparkAPIAggregation.Core\WindparkAPIAggregation.Core.csproj", "{D25B6FC0-80EC-4106-94D4-B475BEB8A721}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIAggregation.Interface", "WindparkAPIAggregation.Interface\WindparkAPIAggregation.Interface.csproj", "{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{08BF495B-4E25-4098-8F23-848091C3169A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestLibrary", "RestLibrary\RestLibrary.csproj", "{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIAggregation.Contracts", "WindparkAPIAggregation.Contracts\WindparkAPIAggregation.Contracts.csproj", "{C3085EF7-B666-472A-903A-316E7E63DE13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D25B6FC0-80EC-4106-94D4-B475BEB8A721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D25B6FC0-80EC-4106-94D4-B475BEB8A721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D25B6FC0-80EC-4106-94D4-B475BEB8A721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D25B6FC0-80EC-4106-94D4-B475BEB8A721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3085EF7-B666-472A-903A-316E7E63DE13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3085EF7-B666-472A-903A-316E7E63DE13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3085EF7-B666-472A-903A-316E7E63DE13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3085EF7-B666-472A-903A-316E7E63DE13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46} = {08BF495B-4E25-4098-8F23-848091C3169A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {54C78BFB-C410-4B60-AD6A-1B9DD69AE9A1}
+	EndGlobalSection
+EndGlobal
