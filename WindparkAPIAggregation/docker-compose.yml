@@ -2,7 +2,13 @@ version: "3"
 
 services: 
   rabbitmq:
-    image: rabbitmq:latest
+    image: rabbitmq:3
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
 
   interflex:
     image: windparkdemo:latest

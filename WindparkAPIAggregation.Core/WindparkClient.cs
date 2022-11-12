@@ -1,21 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Quartz;
 using RestLibrary;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Quartz;
 using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Interface;
 
 namespace WindparkAPIAggregation.Core
 {
-    public class WindparkClient: IWindparkClient, IJob
+    public class WindparkClient : IWindparkClient, IJob
     {
         private readonly RestClient _restClient;
-        private List<WindParkAggregationData> _windParkAggregationData = new List<WindParkAggregationData>();
-        public WindparkClient(ILogger<RestClient> restLogger, HttpClient httpClient)
+        private readonly ILogger<WindparkClient> _logger;
+
+        private readonly WindParkAggregationPersistor _windParkAggregationPersistor;
+
+        public WindparkClient(ILogger<RestClient> restLogger, HttpClient httpClient,
+            WindParkAggregationPersistor windParkAggregationPersistor, ILogger<WindparkClient> logger)
         {
+            _windParkAggregationPersistor = windParkAggregationPersistor;
+            _logger = logger;
             _restClient = new RestClient(httpClient, restLogger);
         }
 
@@ -26,31 +32,64 @@ namespace WindparkAPIAggregation.Core
 
         public async Task GetData()
         {
+            _logger.LogInformation("Getting windparks data");
             var windParkCollectionData = await _restClient.CallAsync<List<WindPark>>($"api/Site", HttpMethod.Get);
 
-            foreach (var windPark in windParkCollectionData)
+            foreach (var windParkId in windParkCollectionData.Select(windPark => windPark.Id))
             {
-                var windParkId = windPark.Id;
-
                 var windParkData = await _restClient.CallAsync<WindPark>($"api/Site/{windParkId}", HttpMethod.Get);
 
-
-                _windParkAggregationData.Add(new WindParkAggregationData
+                _windParkAggregationPersistor.WindParkAggregationData.Add(new WindParkAggregationData
                 {
-                    Id = windParkData.Id,
+                    WindParkId = windParkData.Id,
                     AggregatedTurbine = windParkData.Turbines.Select(t => new AggregatedTurbine
                     {
-                        Id = t.Id,
-                        CurrentProduction = new List<double> {t.CurrentProduction},
-                        windspeed = new List<double> {t.Windspeed}
+                        TurbineId = t.Id,
+                        CurrentProduction = t.CurrentProduction,
+                        WindSpeed = t.Windspeed
                     }).ToList()
                 });
             }
         }
 
-        public List<WindParkAggregationData> GetAggregatedData()
+        public List<WindParkAggregated> GetAggregatedData()
         {
-            return _windParkAggregationData;
+            var windParksGroup =
+                _windParkAggregationPersistor.WindParkAggregationData.GroupBy(w => w.WindParkId);
+            var windParkAggregated = new List<WindParkAggregated>();
+
+            foreach (var windPark in windParksGroup)
+            {
+                var aggregatedTurbineFlattened = windPark.SelectMany(a => a.AggregatedTurbine).ToList();
+                var turbinesGroups = aggregatedTurbineFlattened.GroupBy(w => w.TurbineId).ToList();
+
+                var aggregatedTurbinesData = new List<AggregatedTurbineData>();
+
+                foreach (var turbines in turbinesGroups)
+                {
+                    var aggregatedTurbineData = new AggregatedTurbineData
+                    {
+                        TurbineId = turbines.Key,
+                        WindSpeedCurrentProductionAggregation =
+                            turbines.Select(t => (t.WindSpeed, t.CurrentProduction)).ToList()
+                    };
+
+                    aggregatedTurbinesData.Add(aggregatedTurbineData);
+                }
+
+                windParkAggregated.Add(new WindParkAggregated
+                {
+                    WindParkId = windPark.Key,
+                    AggregatedTurbineData = aggregatedTurbinesData
+                });
+            }
+
+            return windParkAggregated;
+        }
+
+        public void CleanAggregatedData()
+        {
+            _windParkAggregationPersistor.WindParkAggregationData.Clear();
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Quartz;
+﻿using Quartz;
+using System.Linq;
 using System.Threading.Tasks;
 using WindparkAPIAggregation.Interface;
 
@@ -21,18 +21,17 @@ namespace WindparkAPIAggregation.Core
             await SendDataToRabbitMq();
         }
 
-        public async Task SendDataToRabbitMq()
+        public Task SendDataToRabbitMq()
         {
-            //await _windparkClient.GetData();
-
             var aggregatedData = _windparkClient.GetAggregatedData();
 
             if (aggregatedData == null || aggregatedData.Any())
             {
-                // todo aggregate data better, flat the structure
-
                 _messagePublisher.SendMessage(aggregatedData);
+                _windparkClient.CleanAggregatedData();
             }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -5,8 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
-using Quartz;
+using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Core;
+using WindparkAPIAggregation.Extensions;
+using WindparkAPIAggregation.HostedServices;
 using WindparkAPIAggregation.Interface;
 
 namespace WindparkAPIAggregation
@@ -25,6 +27,11 @@ namespace WindparkAPIAggregation
         {
             services.AddSingleton<IWindparkApiAggregator, WindparkApiAggregator>();
             services.AddSingleton<IMessageProducer, RabbitMQProducer>();
+            services.AddSingleton<WindParkAggregationPersistor>();
+
+            services.AddLogging();
+
+            services.AddHostedService<RunScheduler>();
 
             services.AddHttpClient<IWindparkClient, WindparkClient>((s, c) =>
             {
@@ -37,56 +44,7 @@ namespace WindparkAPIAggregation
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WindPark", Version = "v1" });
             });
 
-            ConfigureQuartz(services);
-        }
-
-        private static void ConfigureQuartz(IServiceCollection services)
-        {
-            services.AddQuartz(q =>
-            {
-                q.UseMicrosoftDependencyInjectionJobFactory();
-                q.UseInMemoryStore();
-
-                q.UseDefaultThreadPool(tp =>
-                {
-                    tp.MaxConcurrency = 5;
-                });
-
-                
-
-                var sendAggregatedDataToRabbitMqJobKey = new JobKey(nameof(WindparkApiAggregator));
-                q.AddJob<WindparkApiAggregator>(opts => opts
-                    .WithIdentity(sendAggregatedDataToRabbitMqJobKey)
-                );
-                q.AddTrigger(opts => opts
-                    .ForJob(sendAggregatedDataToRabbitMqJobKey)
-                    .WithIdentity($"{sendAggregatedDataToRabbitMqJobKey.Name}Trigger")
-                    .StartNow()
-                    .WithSimpleSchedule(a =>
-                        a.WithIntervalInMinutes(5).RepeatForever()
-                    )
-                );
-
-                var windparkClientGetDataJobKey = new JobKey(nameof(WindparkClient));
-                q.AddJob<WindparkClient>(opts => opts
-                    .WithIdentity(windparkClientGetDataJobKey)
-                );
-                q.AddTrigger(opts => opts
-                    .ForJob(windparkClientGetDataJobKey)
-                    .WithIdentity($"{windparkClientGetDataJobKey.Name}Trigger")
-                    .StartNow()
-                    .WithSimpleSchedule(a =>
-                        a.WithIntervalInSeconds(10 + 2).RepeatForever()
-                    )
-                );
-            });
-
-            // background service that handles scheduler lifecycle
-            services.AddQuartzHostedService(options =>
-            {
-                // when shutting down we want jobs to complete gracefully
-                options.WaitForJobsToComplete = true;
-            });
+            services.ConfigureQuartz();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
