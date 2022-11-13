@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Interface;
 
 namespace WindparkAPIAggregation.HostedServices
@@ -12,12 +14,16 @@ namespace WindparkAPIAggregation.HostedServices
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IWindparkClient _windparkClient;
 
-        public RunScheduler(IServiceScopeFactory serviceScopeFactory)
+        private readonly WindparkIntervalConfiguration _windparkIntervalConfiguration;
+
+        public RunScheduler(IServiceScopeFactory serviceScopeFactory,
+            IOptions<WindparkIntervalConfiguration> windparkIntervalConfiguration)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _windparkIntervalConfiguration = windparkIntervalConfiguration.Value;
             var scope = _serviceScopeFactory.CreateScope();
-            _windparkClient = scope.ServiceProvider.GetRequiredService<IWindparkClient>(); 
-        } 
+            _windparkClient = scope.ServiceProvider.GetRequiredService<IWindparkClient>();
+        }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -25,7 +31,9 @@ namespace WindparkAPIAggregation.HostedServices
             while (!stoppingToken.IsCancellationRequested)
             {
                 await _windparkClient.GetData();
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                await Task.Delay(
+                    TimeSpan.FromSeconds(_windparkIntervalConfiguration.WindparkApiFrequencySeconds),
+                    stoppingToken);
             }
 
             //// Option 2 (.NET 6)

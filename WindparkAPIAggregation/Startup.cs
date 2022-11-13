@@ -38,13 +38,17 @@ namespace WindparkAPIAggregation
                 c.BaseAddress = new Uri(Configuration.GetValue<string>("WindparkApi:BaseAddress"));
             });
 
+            services.Configure<WindparkIntervalConfiguration>(Configuration.GetSection("WindparkInterval"));
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMqSection"));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WindPark", Version = "v1" });
             });
 
-            services.ConfigureQuartz();
+            var windparkIntervalConfig = Configuration.GetSection("WindparkInterval");
+            services.ConfigureQuartz(Convert.ToInt32(windparkIntervalConfig["WindparkAggregationFrequencyMinutes"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

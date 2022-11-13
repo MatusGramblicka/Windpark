@@ -6,17 +6,14 @@ namespace WindparkAPIAggregation.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void ConfigureQuartz(this IServiceCollection services)
+        public static void ConfigureQuartz(this IServiceCollection services, int windparkAggregationFrequencyMinutes)
         {
             services.AddQuartz(q =>
             {
                 q.UseMicrosoftDependencyInjectionJobFactory();
                 q.UseInMemoryStore();
 
-                q.UseDefaultThreadPool(tp =>
-                {
-                    tp.MaxConcurrency = 5;
-                });
+                q.UseDefaultThreadPool(tp => { tp.MaxConcurrency = 5; });
 
                 var sendAggregatedDataToRabbitMqJobKey = new JobKey(nameof(WindparkApiAggregator));
                 q.AddJob<WindparkApiAggregator>(opts => opts
@@ -27,7 +24,7 @@ namespace WindparkAPIAggregation.Extensions
                     .WithIdentity($"{sendAggregatedDataToRabbitMqJobKey.Name}Trigger")
                     .StartNow()
                     .WithSimpleSchedule(a =>
-                        a.WithIntervalInMinutes(1).RepeatForever()
+                        a.WithIntervalInMinutes(windparkAggregationFrequencyMinutes).RepeatForever()
                     )
                 );
             });
