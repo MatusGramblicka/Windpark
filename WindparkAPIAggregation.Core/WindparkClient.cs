@@ -89,6 +89,9 @@ namespace WindparkAPIAggregation.Core
 
         public void CleanAggregatedData()
         {
+            // _windParkAggregationPersistor should be accessed only exclusively,
+            // when writing and then deleting,
+            // since it can happen that it deletes data which was not send
             _windParkAggregationPersistor.WindParkAggregationData.Clear();
         }
     }

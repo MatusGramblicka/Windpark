@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
+using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Interface;
 
 namespace WindparkAPIAggregation.Core
@@ -10,29 +12,32 @@ namespace WindparkAPIAggregation.Core
     {
         private readonly ILogger<RabbitMQProducer> _logger;
 
-        public RabbitMQProducer(ILogger<RabbitMQProducer> logger)
+        private readonly RabbitMqConfiguration _rabbitMqConfiguration;
+
+        public RabbitMQProducer(ILogger<RabbitMQProducer> logger, IOptions<RabbitMqConfiguration> rabbitMqConfiguration)
         {
             _logger = logger;
+            _rabbitMqConfiguration = rabbitMqConfiguration.Value;
         }
 
         public void SendMessage<T>(T message)
         {
             var factory = new ConnectionFactory
             {
-                HostName = "rabbitmq",
-                Port = 5672
+                HostName = _rabbitMqConfiguration.HostName,
+                Port = _rabbitMqConfiguration.Port
             };
 
             var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
             _logger.LogInformation("Connection to RabbitMQ created");
 
-            channel.QueueDeclare("windpark", exclusive: false);
+            channel.QueueDeclare(_rabbitMqConfiguration.Queue, exclusive: false, autoDelete: true);
 
-            var json = JsonConvert.SerializeObject(message);
-            var body = Encoding.UTF8.GetBytes(json);
+            var jsonString = JsonConvert.SerializeObject(message);
+            var body = Encoding.UTF8.GetBytes(jsonString);
 
-            channel.BasicPublish(exchange: "", routingKey: "windpark", body: body);
+            channel.BasicPublish(exchange: "", routingKey: _rabbitMqConfiguration.RoutingKey, body: body);
             _logger.LogInformation("Data is sent to RabbitMQ");
         }
     }
