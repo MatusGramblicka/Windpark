@@ -2,11 +2,32 @@ version: "3"
 
 services: 
   rabbitmq:
-    image: rabbitmq:latest
+    image: rabbitmq:3
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
 
-  interflex:
+  windparkdemo:
     image: windparkdemo:latest
     depends_on:
       - rabbitmq
-    ports:
-      - 3001:3001
+    environment:
+      - WindparkInterval:WindparkApiFrequencySeconds=10
+      - WindparkInterval:WindparkAggregationFrequencyMinutes=1
+      - RabbitMqSection:HostName=rabbitmq
+      - RabbitMqSection:Port=5672
+      - RabbitMqSection:Queue=windpark
+      - RabbitMqSection:RoutingKey=windpark
+    
+  windparkapiconsumer:
+    image: windparkapiconsumer:latest
+    depends_on:
+      - rabbitmq
+    environment:     
+      - RabbitMqSection:HostName=rabbitmq
+      - RabbitMqSection:Port=5672
+      - RabbitMqSection:Queue=windpark
+      - RabbitMqSection:RoutingKey=windpark   

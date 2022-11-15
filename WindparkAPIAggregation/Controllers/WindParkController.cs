@@ -15,12 +15,13 @@ namespace WindparkAPIAggregation.Controllers
             _windparkApiAggregator = windparkApiAggregator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetData()
-        {
-            await _windparkApiAggregator.SendDataToRabbitMq();
+        // only for debug
+        //[HttpGet]
+        //public async Task<ActionResult> GetData()
+        //{
+        //    await _windparkApiAggregator.SendDataToRabbitMq();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }

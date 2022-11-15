@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 
-namespace WindparkAPIAggregation
+namespace WindparkAPIConsumer
 {
     public class Program
     {
@@ -16,11 +14,7 @@ namespace WindparkAPIAggregation
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>().ConfigureLogging((hostingContext, logging) =>
-                    {
-                        logging.ClearProviders();
-                        logging.AddNLog();
-                    });
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

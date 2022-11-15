@@ -7,6 +7,7 @@ namespace WindparkAPIAggregation.Interface
     public interface IWindparkClient
     {
         Task GetData();
-        List<WindParkAggregationData> GetAggregatedData();
+        List<WindParkAggregated> GetAggregatedData();
+        void CleanAggregatedData();
     }
 }

@@ -1,16 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-//using Formatting = System.Xml.Formatting;
-//using JsonException = System.Text.Json.JsonException;
 
 namespace RestLibrary
 {
@@ -33,44 +28,6 @@ namespace RestLibrary
             };
         }
 
-        public IRestRequest WithRawStringBody(string requestBody)
-        {
-            if (requestBody == null)
-            {
-                return this;
-            }
-
-            _requestJsonBody = JsonConvert.SerializeObject(requestBody);
-            _httpRequestMessage.Content = new StringContent(_requestJsonBody, Encoding.UTF8, "application/json");
-            return this;
-        }
-
-        public IRestRequest WithJsonBody(string requestBody)
-        {
-            if (requestBody == null)
-            {
-                return this;
-            }
-
-            _requestJsonBody = requestBody;
-            _httpRequestMessage.Content = new StringContent(_requestJsonBody, Encoding.UTF8, "application/json");
-            return this;
-        }
-
-        public IRestRequest WithJsonBody(object requestBody)
-        {
-            if (requestBody == null)
-            {
-                return this;
-            }
-
-            return WithJsonBody(JsonConvert.SerializeObject(requestBody, Formatting.None, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore
-            }));
-        }
-
         public IRestRequest WithHeaderData(string key, string value)
         {
             if (key == null || value == null)
@@ -80,38 +37,6 @@ namespace RestLibrary
 
             _httpRequestMessage.Headers.Add(key, value);
             return this;
-        }
-
-        public IRestRequest WithHeaderData(string key, IEnumerable<string> value)
-        {
-            if (key == null || value == null)
-            {
-                return this;
-            }
-
-            _httpRequestMessage.Headers.Add(key, value);
-            return this;
-        }
-
-        public IRestRequest WithHeaderData(Dictionary<string, string> headerData)
-        {
-            if (headerData == null)
-            {
-                return this;
-            }
-
-            var result = (IRestRequest)this;
-            foreach (var kvPair in headerData)
-            {
-                result = result.WithHeaderData(kvPair.Key, kvPair.Value);
-            }
-
-            return result;
-        }
-
-        public IRestRequest WithCorrelationId(Guid correlationId)
-        {
-            return WithHeaderData(CommonRestTokens.CORRELATION_ID_TOKEN, correlationId.ToString());
         }
 
         /// <summary>
@@ -176,7 +101,7 @@ namespace RestLibrary
             if (typeof(TResponseType) == typeof(string))
             {
                 var stringResult = await InvokeAsync();
-                return (RestResponse<TResponseType>)(object)stringResult;
+                return (RestResponse<TResponseType>) (object) stringResult;
             }
 
             var response = await InvokeAsync();
@@ -211,6 +136,5 @@ namespace RestLibrary
 
             return result;
         }
-
     }
 }

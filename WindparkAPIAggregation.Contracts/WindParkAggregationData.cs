@@ -4,7 +4,7 @@ namespace WindparkAPIAggregation.Contracts
 {
     public class WindParkAggregationData
     {
-        public int Id { get; set; }
+        public int WindParkId { get; set; }
         public List<AggregatedTurbine> AggregatedTurbine { get; set; } = new List<AggregatedTurbine>();
     }
 }
