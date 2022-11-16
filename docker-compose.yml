@@ -21,6 +21,9 @@ services:
       - RabbitMqSection:Port=5672
       - RabbitMqSection:Queue=windpark
       - RabbitMqSection:RoutingKey=windpark
+      - Logging:LogLevel:Default=Information
+      - Logging:LogLevel:System=Information
+      - Logging:LogLevel:Microsoft=Information
     
   windparkapiconsumer:
     image: windparkapiconsumer:latest
@@ -31,3 +34,6 @@ services:
       - RabbitMqSection:Port=5672
       - RabbitMqSection:Queue=windpark
       - RabbitMqSection:RoutingKey=windpark   
+      - Logging:LogLevel:Default=Information
+      - Logging:LogLevel:System=Information
+      - Logging:LogLevel:Microsoft=Information
