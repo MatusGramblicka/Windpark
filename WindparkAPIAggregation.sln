@@ -9,13 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Interface", "WindparkAPIAggregation.Interface\WindparkAPIAggregation.Interface.csproj", "{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{08BF495B-4E25-4098-8F23-848091C3169A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestLibrary", "RestLibrary\RestLibrary.csproj", "{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Contracts", "WindparkAPIAggregation.Contracts\WindparkAPIAggregation.Contracts.csproj", "{C3085EF7-B666-472A-903A-316E7E63DE13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIConsumer", "WindparkAPIConsumer\WindparkAPIConsumer.csproj", "{555FC636-BC15-4596-A481-21DB79D4DDC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIConsumer", "WindparkAPIConsumer\WindparkAPIConsumer.csproj", "{555FC636-BC15-4596-A481-21DB79D4DDC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +31,6 @@ Global
 		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3085EF7-B666-472A-903A-316E7E63DE13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3085EF7-B666-472A-903A-316E7E63DE13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3085EF7-B666-472A-903A-316E7E63DE13}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -50,9 +42,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5CB97D4C-82B7-4C69-A6DE-04D89EDF7C46} = {08BF495B-4E25-4098-8F23-848091C3169A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54C78BFB-C410-4B60-AD6A-1B9DD69AE9A1}
