@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using WindparkAPIAggregation.Contracts;
 
@@ -7,7 +7,8 @@ namespace WindparkAPIAggregation.Interface
     public interface IWindparkClient
     {
         Task GetData();
-        List<WindParkAggregated> GetAggregatedData();
-        void CleanAggregatedData();
+        AggregatedData GetAggregatedDataFromMemory();
+        Task<AggregatedData> GetAggregatedDataFromDb();
+        void CleanAggregatedData(DateTime datetime);
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace WindparkAPIAggregation.Contracts
+namespace WindparkAPIAggregation.Contracts;
+
+public class WindParkAggregationPersistor
 {
-    public class WindParkAggregationPersistor
-    {
-        public List<WindParkAggregationData> WindParkAggregationData { get; set; } =
-            new List<WindParkAggregationData>();
-    }
+    public List<WindPark> WindParkAggregationData { get; set; } = new();
 }

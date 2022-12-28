@@ -1,14 +1,16 @@
-﻿namespace WindparkAPIAggregation.Contracts
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WindparkAPIAggregation.Contracts;
+
+public class Turbine
 {
-    public class Turbine
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Manufacturer { get; set; }
-        public int Version { get; set; }
-        public int MaxProduction { get; set; }
-        public double CurrentProduction { get; set; }
-        public double Windspeed { get; set; }
-        public string WindDirection { get; set; }
-    }
+    public Guid Id { get; set; }
+    public int TurbineNumber { get; set; }
+    public double CurrentProduction { get; set; } 
+    public double WindSpeed { get; set; }
+
+    [ForeignKey(nameof(WindPark))]
+    public Guid WindParkId { get; set; }
+    public WindPark WindPark { get; set; }
 }
