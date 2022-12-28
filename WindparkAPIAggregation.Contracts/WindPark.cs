@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WindparkAPIAggregation.Contracts
+namespace WindparkAPIAggregation.Contracts;
+
+public class WindPark
 {
-    public class WindPark
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Id { get; set; }
-        public string Region { get; set; }
-        public string Country { get; set; }
-        public List<Turbine> Turbines { get; set; } = new List<Turbine>();
-    }
+    [Column("WindParkId")] 
+    public Guid Id { get; set; }
+    public int WindParkNumber { get; set; }
+    public DateTime DateAdded { get; set; }
+    public ICollection<Turbine> Turbines { get; set; }
 }

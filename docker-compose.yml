@@ -10,10 +10,20 @@ services:
       - 5672:5672
       - 15672:15672
 
+  sql:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: sql_server2022
+    ports: # not actually needed, because the two services are on the same network.
+      - "1433:1433" 
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=A&VeryComplex123Password
+
   windparkdemo:
     image: windparkdemo:latest
     depends_on:
       - rabbitmq
+      - sql_server2022
     environment:
       - WindparkInterval:WindparkApiFrequencySeconds=10
       - WindparkInterval:WindparkAggregationFrequencyMinutes=1
@@ -29,6 +39,7 @@ services:
     image: windparkapiconsumer:latest
     depends_on:
       - rabbitmq
+      - sql_server2022
     environment:     
       - RabbitMqSection:HostName=rabbitmq
       - RabbitMqSection:Port=5672
@@ -37,3 +48,4 @@ services:
       - Logging:LogLevel:Default=Information
       - Logging:LogLevel:System=Information
       - Logging:LogLevel:Microsoft=Information
+    

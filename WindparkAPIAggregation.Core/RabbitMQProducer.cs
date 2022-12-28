@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
+using Polly;
+using RabbitMQ.Client.Exceptions;
 using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Interface;
 
@@ -13,6 +17,9 @@ public class RabbitMQProducer : IMessageProducer
     private readonly ILogger<RabbitMQProducer> _logger;
 
     private readonly RabbitMqConfiguration _rabbitMqConfiguration;
+    private IConnection _connection;
+
+    private const int RetryCount = 3;
 
     public RabbitMQProducer(ILogger<RabbitMQProducer> logger, IOptions<RabbitMqConfiguration> rabbitMqConfiguration)
     {
@@ -20,7 +27,7 @@ public class RabbitMQProducer : IMessageProducer
         _rabbitMqConfiguration = rabbitMqConfiguration.Value;
     }
 
-    public void SendMessage<T>(T message)
+    public void SendMessage<T>(T message) where T: class
     {
         var factory = new ConnectionFactory
         {
@@ -28,9 +35,14 @@ public class RabbitMQProducer : IMessageProducer
             Port = _rabbitMqConfiguration.Port
         };
 
-        var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
-        _logger.LogInformation("Connection to RabbitMQ created");
+        var policy = Policy.Handle<SocketException>().Or<BrokerUnreachableException>()
+            .WaitAndRetry(RetryCount, op => TimeSpan.FromSeconds(Math.Pow(2, op)),
+                (ex, time) => { _logger.LogInformation("Couldn't connect to RabbitMQ server."); });
+
+        policy.Execute(() => { _connection = factory.CreateConnection(); });
+        
+        using var channel = _connection.CreateModel();
+        _logger.LogDebug("Connection to RabbitMQ created");
 
         channel.QueueDeclare(_rabbitMqConfiguration.Queue, exclusive: false, autoDelete: true);
 
@@ -38,6 +50,6 @@ public class RabbitMQProducer : IMessageProducer
         var body = Encoding.UTF8.GetBytes(jsonString);
 
         channel.BasicPublish(exchange: "", routingKey: _rabbitMqConfiguration.RoutingKey, body: body);
-        _logger.LogInformation("Data is sent to RabbitMQ");
+        _logger.LogDebug("Data is sent to RabbitMQ");
     }
 }

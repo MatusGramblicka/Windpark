@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIConsumer", "WindparkAPIConsumer\WindparkAPIConsumer.csproj", "{555FC636-BC15-4596-A481-21DB79D4DDC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIAggregation.Repository", "WindparkAPIAggregation.Repository\WindparkAPIAggregation.Repository.csproj", "{11A9D189-7803-4E6A-994F-9960FB7BD363}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{555FC636-BC15-4596-A481-21DB79D4DDC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{555FC636-BC15-4596-A481-21DB79D4DDC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{555FC636-BC15-4596-A481-21DB79D4DDC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11A9D189-7803-4E6A-994F-9960FB7BD363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A9D189-7803-4E6A-994F-9960FB7BD363}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A9D189-7803-4E6A-994F-9960FB7BD363}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A9D189-7803-4E6A-994F-9960FB7BD363}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

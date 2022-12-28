@@ -6,11 +6,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Net.Http;
+using Microsoft.EntityFrameworkCore;
 using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Core;
 using WindparkAPIAggregation.Extensions;
 using WindparkAPIAggregation.HostedServices;
 using WindparkAPIAggregation.Interface;
+using WindparkAPIAggregation.Repository;
+using System.Configuration;
 
 namespace WindparkAPIAggregation;
 
@@ -34,10 +37,8 @@ public class Startup
 
         services.AddHostedService<RunScheduler>();
 
-        services.AddHttpClient<IWindparkClient, WindparkClient>("WindParkAPI", (s, c) =>
-        {
-            c.BaseAddress = new Uri(Configuration.GetValue<string>("WindparkApi:BaseAddress"));
-        });
+        services.AddHttpClient<IWindparkClient, WindparkClient>("WindParkAPI",
+            (s, c) => { c.BaseAddress = new Uri(Configuration.GetValue<string>("WindparkApi:BaseAddress")); });
 
         services.AddSingleton(
             sp => sp.GetService<IHttpClientFactory>().CreateClient("WindParkAPI"));
@@ -46,10 +47,11 @@ public class Startup
         services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMqSection"));
 
         services.AddControllers();
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "WindPark", Version = "v1" });
-        });
+        services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "WindParkDto", Version = "v1"}); });
+
+        services.AddDbContext<AppDbContext>(opts =>
+            opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection"),
+                b => b.MigrationsAssembly("WindparkAPIAggregation")));
 
         var windparkIntervalConfig = Configuration.GetSection("WindparkInterval");
         services.ConfigureQuartz(Convert.ToInt32(windparkIntervalConfig["WindparkAggregationFrequencyMinutes"]));
@@ -62,7 +64,7 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WindPark v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WindParkDto v1"));
         }
 
         app.UseHttpsRedirection();
@@ -71,9 +73,6 @@ public class Startup
 
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 }
