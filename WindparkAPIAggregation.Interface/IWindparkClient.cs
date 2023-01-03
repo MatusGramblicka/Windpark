@@ -9,6 +9,6 @@ namespace WindparkAPIAggregation.Interface
         Task GetData();
         AggregatedData GetAggregatedDataFromMemory();
         Task<AggregatedData> GetAggregatedDataFromDb();
-        void CleanAggregatedData(DateTime datetime);
+        Task CleanAggregatedData(DateTime datetime);
     }
 }

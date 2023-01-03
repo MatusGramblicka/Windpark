@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Quartz;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WindparkAPIAggregation.Interface;
@@ -34,7 +34,7 @@ public class WindparkApiAggregator : IWindparkApiAggregator, IJob
         {
             _logger.LogDebug("Sending GetAggregatedData to rabbit");
             _messagePublisher.SendMessage(aggregatedData);
-            _windparkClient.CleanAggregatedData(DateTime.Now);
+            await _windparkClient.CleanAggregatedData(DateTime.Now);
         }
 
         var aggregatedDataFromDb = await _windparkClient.GetAggregatedDataFromDb();

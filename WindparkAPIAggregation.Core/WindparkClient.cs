@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Quartz.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Net.Security;
+using System.Threading;
 using System.Threading.Tasks;
 using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Interface;
@@ -17,16 +16,18 @@ using WindparkAPIAggregation.Repository;
 
 namespace WindparkAPIAggregation.Core;
 
-public class WindparkClient : IWindparkClient
+public class WindParkClient : IWindparkClient
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<WindparkClient> _logger;
+    private readonly ILogger<WindParkClient> _logger;
     private readonly AppDbContext _context;
+
+    private readonly SemaphoreSlim _stateLock = new(1, 1);
 
     private readonly WindParkAggregationPersistor _windParkAggregationPersistor;
 
-    public WindparkClient(HttpClient httpClient, WindParkAggregationPersistor windParkAggregationPersistor,
-        ILogger<WindparkClient> logger, IServiceScopeFactory serviceScopeFactory)
+    public WindParkClient(HttpClient httpClient, WindParkAggregationPersistor windParkAggregationPersistor,
+        ILogger<WindParkClient> logger, IServiceScopeFactory serviceScopeFactory)
     {
         _httpClient = httpClient;
         _windParkAggregationPersistor = windParkAggregationPersistor;
@@ -38,7 +39,7 @@ public class WindparkClient : IWindparkClient
 
     public async Task GetData()
     {
-        _logger.LogInformation("Getting windparks data");
+        _logger.LogInformation("Getting windParks data");
         var windParkCollectionData =
             await _httpClient.GetFromJsonAsync<List<WindParkDto>>($"api/Site");
 
@@ -57,7 +58,7 @@ public class WindparkClient : IWindparkClient
             }
 
             await SaveToDb(windParkData);
-            SaveToMemory(windParkData);
+            await SaveToMemory(windParkData);
         }
     }
 
@@ -69,27 +70,10 @@ public class WindparkClient : IWindparkClient
 
         foreach (var windPark in windParksGroup)
         {
-            var aggregatedTurbineFlattened = windPark.SelectMany(a => a.Turbines).ToList();
-            var turbinesGroups = aggregatedTurbineFlattened.GroupBy(w => w.TurbineNumber).ToList();
-
-            var aggregatedTurbinesData = new List<AggregatedTurbineData>();
-
-            foreach (var turbines in turbinesGroups)
-            {
-                var aggregatedTurbineData = new AggregatedTurbineData
-                {
-                    TurbineId = turbines.Key,
-                    WindSpeedCurrentProductionAggregation =
-                        turbines.Select(t => (t.WindSpeed, t.CurrentProduction)).ToList()
-                };
-
-                aggregatedTurbinesData.Add(aggregatedTurbineData);
-            }
-
             windParkAggregated.Add(new WindParkAggregated
             {
                 WindParkId = windPark.Key,
-                AggregatedTurbineData = aggregatedTurbinesData
+                AggregatedTurbineData = Aggregate(windPark)
             });
         }
 
@@ -115,27 +99,10 @@ public class WindparkClient : IWindparkClient
 
         foreach (var windPark in windParksGroup)
         {
-            var aggregatedTurbineFlattened = windPark.SelectMany(a => a.Turbines).ToList();
-            var turbinesGroups = aggregatedTurbineFlattened.GroupBy(w => w.TurbineNumber).ToList();
-
-            var aggregatedTurbinesData = new List<AggregatedTurbineData>();
-
-            foreach (var turbines in turbinesGroups)
-            {
-                var aggregatedTurbineData = new AggregatedTurbineData
-                {
-                    TurbineId = turbines.Key,
-                    WindSpeedCurrentProductionAggregation =
-                        turbines.Select(t => (t.WindSpeed, t.CurrentProduction)).ToList()
-                };
-
-                aggregatedTurbinesData.Add(aggregatedTurbineData);
-            }
-
             windParkAggregated.Add(new WindParkAggregated
             {
                 WindParkId = windPark.Key,
-                AggregatedTurbineData = aggregatedTurbinesData
+                AggregatedTurbineData = /*aggregatedTurbinesData*/Aggregate(windPark)
             });
         }
 
@@ -148,12 +115,34 @@ public class WindparkClient : IWindparkClient
         };
     }
 
-    public async Task CleanAggregatedDataFromDb(IIncludableQueryable<WindPark, ICollection<Turbine>> windParks)
+    private static List<AggregatedTurbineData> Aggregate(IGrouping<int, WindPark> windPark)
+    {
+        var aggregatedTurbineFlattened = windPark.SelectMany(a => a.Turbines);
+        var turbinesGroups = aggregatedTurbineFlattened.GroupBy(w => w.TurbineNumber);
+
+        var aggregatedTurbinesData = new List<AggregatedTurbineData>();
+
+        foreach (var turbines in turbinesGroups)
+        {
+            var aggregatedTurbineData = new AggregatedTurbineData
+            {
+                TurbineId = turbines.Key,
+                WindSpeedCurrentProductionAggregation =
+                    turbines.Select(t => (t.WindSpeed, t.CurrentProduction)).ToList()
+            };
+
+            aggregatedTurbinesData.Add(aggregatedTurbineData);
+        }
+
+        return aggregatedTurbinesData;
+    }
+
+    private async Task CleanAggregatedDataFromDb(IIncludableQueryable<WindPark, ICollection<Turbine>> windParks)
     {
         foreach (var windPark in windParks)
         {
             var aggregatedTurbineFlattenedIds = windPark.Turbines.Select(t => t.Id).ToList();
-            _logger.LogInformation($"count db before {aggregatedTurbineFlattenedIds.Count}");
+            _logger.LogInformation($"count db elements before deletion: {aggregatedTurbineFlattenedIds.Count}");
 
             foreach (var aggregatedTurbineFlattenedId in aggregatedTurbineFlattenedIds)
             {
@@ -174,16 +163,23 @@ public class WindparkClient : IWindparkClient
         await _context.SaveChangesAsync();
     }
 
-    public void CleanAggregatedData(DateTime datetime)
+    public async Task CleanAggregatedData(DateTime datetime)
     {
-        _logger.LogInformation($"count before {_windParkAggregationPersistor.WindParkAggregationData.Count}");
+        _logger.LogInformation(
+            $"count before memory deletion: {_windParkAggregationPersistor.WindParkAggregationData.Count}");
         var windParksForDeletion =
             _windParkAggregationPersistor.WindParkAggregationData.Where(w => w.DateAdded < datetime).ToList();
-        foreach (var windParkForDeletion in windParksForDeletion)
+        await ExecutionDecorator.ExecuteAction(windParksForDeletion, _ =>
         {
-            _windParkAggregationPersistor.WindParkAggregationData.Remove(windParkForDeletion);
-        }
-        _logger.LogInformation($"count after {_windParkAggregationPersistor.WindParkAggregationData.Count}");
+            foreach (var windParkForDeletion in windParksForDeletion)
+            {
+                _windParkAggregationPersistor.WindParkAggregationData.Remove(windParkForDeletion);
+            }
+
+            return Task.CompletedTask;
+        }, _logger, _stateLock);
+        _logger.LogInformation(
+            $"count after memory deletion:{_windParkAggregationPersistor.WindParkAggregationData.Count}");
     }
 
     private async Task SaveToDb(WindParkDto windParkData)
@@ -228,18 +224,23 @@ public class WindparkClient : IWindparkClient
         }
     }
 
-    private void SaveToMemory(WindParkDto windParkData)
+    private async Task SaveToMemory(WindParkDto windParkData)
     {
-        _windParkAggregationPersistor.WindParkAggregationData.Add(new WindPark
+        await ExecutionDecorator.ExecuteAction(windParkData, r =>
         {
-            WindParkNumber = windParkData.Id,
-            Turbines = windParkData.Turbines.Select(t => new Turbine
+            _windParkAggregationPersistor.WindParkAggregationData.Add(new WindPark
             {
-                TurbineNumber = t.Id,
-                CurrentProduction = t.CurrentProduction,
-                WindSpeed = t.WindSpeed
-            }).ToList(),
-            DateAdded = DateTime.Now
-        });
+                WindParkNumber = r.Id,
+                Turbines = r.Turbines.Select(t => new Turbine
+                {
+                    TurbineNumber = t.Id,
+                    CurrentProduction = t.CurrentProduction,
+                    WindSpeed = t.WindSpeed
+                }).ToList(),
+                DateAdded = DateTime.Now
+            });
+
+            return Task.CompletedTask;
+        }, _logger, _stateLock);
     }
 }
