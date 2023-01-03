@@ -1,19 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Net.Http;
-using Microsoft.EntityFrameworkCore;
 using WindparkAPIAggregation.Contracts;
 using WindparkAPIAggregation.Core;
 using WindparkAPIAggregation.Extensions;
 using WindparkAPIAggregation.HostedServices;
 using WindparkAPIAggregation.Interface;
 using WindparkAPIAggregation.Repository;
-using System.Configuration;
 
 namespace WindparkAPIAggregation;
 
@@ -30,14 +29,14 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IWindparkApiAggregator, WindparkApiAggregator>();
-        services.AddSingleton<IMessageProducer, RabbitMQProducer>();
+        services.AddSingleton<IMessageProducer, RabbitMqProducer>();
         services.AddSingleton<WindParkAggregationPersistor>();
 
         services.AddLogging();
 
         services.AddHostedService<RunScheduler>();
 
-        services.AddHttpClient<IWindparkClient, WindparkClient>("WindParkAPI",
+        services.AddHttpClient<IWindparkClient, WindParkClient>("WindParkAPI",
             (s, c) => { c.BaseAddress = new Uri(Configuration.GetValue<string>("WindparkApi:BaseAddress")); });
 
         services.AddSingleton(

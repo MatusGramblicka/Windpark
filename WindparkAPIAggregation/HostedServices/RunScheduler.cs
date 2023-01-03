@@ -10,23 +10,23 @@ namespace WindparkAPIAggregation.HostedServices;
 
 public class RunScheduler : BackgroundService
 {
-    private readonly IWindparkClient _windparkClient;
+    private readonly IWindparkClient _windParkClient;
 
-    private readonly WindparkIntervalConfiguration _windparkIntervalConfiguration;
+    private readonly WindparkIntervalConfiguration _windParkIntervalConfiguration;
 
-    public RunScheduler(IOptions<WindparkIntervalConfiguration> windparkIntervalConfiguration,
+    public RunScheduler(IOptions<WindparkIntervalConfiguration> windParkIntervalConfiguration,
         IWindparkClient windparkClient)
     {
-        _windparkClient = windparkClient;
-        _windparkIntervalConfiguration = windparkIntervalConfiguration.Value;
+        _windParkClient = windparkClient;
+        _windParkIntervalConfiguration = windParkIntervalConfiguration.Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(_windparkIntervalConfiguration.WindparkApiFrequencySeconds));
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(_windParkIntervalConfiguration.WindparkApiFrequencySeconds));
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
-            await _windparkClient.GetData();
+            await _windParkClient.GetData();
         }
     }
 }

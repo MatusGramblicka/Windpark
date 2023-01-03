@@ -12,16 +12,16 @@ using WindparkAPIAggregation.Interface;
 
 namespace WindparkAPIAggregation.Core;
 
-public class RabbitMQProducer : IMessageProducer
+public class RabbitMqProducer : IMessageProducer
 {
-    private readonly ILogger<RabbitMQProducer> _logger;
+    private readonly ILogger<RabbitMqProducer> _logger;
 
     private readonly RabbitMqConfiguration _rabbitMqConfiguration;
     private IConnection _connection;
 
     private const int RetryCount = 3;
 
-    public RabbitMQProducer(ILogger<RabbitMQProducer> logger, IOptions<RabbitMqConfiguration> rabbitMqConfiguration)
+    public RabbitMqProducer(ILogger<RabbitMqProducer> logger, IOptions<RabbitMqConfiguration> rabbitMqConfiguration)
     {
         _logger = logger;
         _rabbitMqConfiguration = rabbitMqConfiguration.Value;
