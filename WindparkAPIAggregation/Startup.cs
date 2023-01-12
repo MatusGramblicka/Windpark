@@ -31,6 +31,8 @@ public class Startup
         services.AddSingleton<IWindparkApiAggregator, WindparkApiAggregator>();
         services.AddSingleton<IMessageProducer, RabbitMqProducer>();
         services.AddSingleton<WindParkAggregationPersistor>();
+        services.AddSingleton<IMemoryOperation, MemoryOperation>();
+        services.AddSingleton<IDatabaseOperation, DatabaseOperation>();
 
         services.AddLogging();
 

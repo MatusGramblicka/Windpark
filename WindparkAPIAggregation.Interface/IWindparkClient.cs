@@ -1,14 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
+﻿using System.Threading.Tasks;
 
-namespace WindparkAPIAggregation.Interface
+namespace WindparkAPIAggregation.Interface;
+
+public interface IWindparkClient
 {
-    public interface IWindparkClient
-    {
-        Task GetData();
-        AggregatedData GetAggregatedDataFromMemory();
-        Task<AggregatedData> GetAggregatedDataFromDb();
-        Task CleanAggregatedData(DateTime datetime);
-    }
+    Task GetData();
 }
