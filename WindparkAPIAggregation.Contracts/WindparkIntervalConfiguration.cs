@@ -1,8 +1,7 @@
-﻿namespace WindparkAPIAggregation.Contracts
+﻿namespace WindparkAPIAggregation.Contracts;
+
+public class WindparkIntervalConfiguration
 {
-    public class WindparkIntervalConfiguration
-    {
-        public int WindparkApiFrequencySeconds { get; set; }
-        public int WindparkAggregationFrequencyMinutes { get; set; }
-    }
+    public int WindparkApiFrequencySeconds { get; set; }
+    public int WindparkAggregationFrequencyMinutes { get; set; }
 }

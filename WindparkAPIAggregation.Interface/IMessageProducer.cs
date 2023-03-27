@@ -1,7 +1,6 @@
-﻿namespace WindparkAPIAggregation.Interface
+﻿namespace WindparkAPIAggregation.Interface;
+
+public interface IMessageProducer
 {
-    public interface IMessageProducer
-    {
-        void SendMessage<T>(T message) where T : class;
-    }
+    void SendMessage<T>(T message) where T : class;
 }
