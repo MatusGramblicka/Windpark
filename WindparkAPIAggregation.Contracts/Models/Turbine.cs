@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WindparkAPIAggregation.Contracts;
+namespace WindparkAPIAggregation.Contracts.Models;
 
 public class Turbine
 {

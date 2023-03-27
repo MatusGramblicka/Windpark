@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WindparkAPIAggregation.Contracts;
+using WindparkAPIAggregation.Contracts.Models;
 using WindparkAPIAggregation.Interface;
 
 namespace WindparkAPIAggregation.Core;

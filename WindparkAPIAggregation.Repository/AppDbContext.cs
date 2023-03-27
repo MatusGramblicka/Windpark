@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WindparkAPIAggregation.Contracts;
+using WindparkAPIAggregation.Contracts.Models;
 
 namespace WindparkAPIAggregation.Repository;
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WindparkAPIAggregation.Contracts.Models;
 
 namespace WindparkAPIAggregation.Contracts;
 

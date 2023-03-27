@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace WindparkAPIAggregation.Interface
+namespace WindparkAPIAggregation.Interface;
+
+public interface IWindparkApiAggregator
 {
-    public interface IWindparkApiAggregator
-    {
-        Task SendDataToRabbitMq();
-    }
+    Task SendDataToRabbitMq();
 }
