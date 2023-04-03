@@ -7,14 +7,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Net.Http;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Core;
-using WindparkAPIAggregation.Extensions;
-using WindparkAPIAggregation.HostedServices;
-using WindparkAPIAggregation.Interface;
-using WindparkAPIAggregation.Repository;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Core;
+using WindParkAPIAggregation.Extensions;
+using WindParkAPIAggregation.HostedServices;
+using WindParkAPIAggregation.Interface;
+using WindParkAPIAggregation.Repository;
 
-namespace WindparkAPIAggregation;
+namespace WindParkAPIAggregation;
 
 public class Startup
 {
@@ -28,7 +28,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IWindparkApiAggregator, WindparkApiAggregator>();
+        services.AddSingleton<IWindParkApiAggregator, WindParkApiAggregator>();
         services.AddSingleton<IMessageProducer, RabbitMqProducer>();
         services.AddSingleton<WindParkAggregationPersistor>();
         services.AddSingleton<IMemoryOperation, MemoryOperation>();
@@ -38,24 +38,26 @@ public class Startup
 
         services.AddHostedService<RunScheduler>();
 
-        services.AddHttpClient<IWindparkClient, WindParkClient>("WindParkAPI",
-            (s, c) => { c.BaseAddress = new Uri(Configuration.GetValue<string>("WindparkApi:BaseAddress")); });
+        services.AddHttpClient<IWindParkClient, WindParkClient>("WindParkAPI",
+            (s, c) => { c.BaseAddress = new Uri(Configuration.GetValue<string>("WindParkApi:BaseAddress")); });
 
         services.AddSingleton(
             sp => sp.GetService<IHttpClientFactory>().CreateClient("WindParkAPI"));
 
-        services.Configure<WindparkIntervalConfiguration>(Configuration.GetSection("WindparkInterval"));
+        services.Configure<WindParkIntervalConfiguration>(Configuration.GetSection("WindParkInterval"));
         services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMqSection"));
 
         services.AddControllers();
         services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "WindParkDto", Version = "v1"}); });
 
+        services.AddScoped<IRepositoryManager, RepositoryManager>();
+
         services.AddDbContext<AppDbContext>(opts =>
             opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection"),
-                b => b.MigrationsAssembly("WindparkAPIAggregation")));
+                b => b.MigrationsAssembly("WindParkAPIAggregation")));
 
-        var windparkIntervalConfig = Configuration.GetSection("WindparkInterval");
-        services.ConfigureQuartz(Convert.ToInt32(windparkIntervalConfig["WindparkAggregationFrequencyMinutes"]));
+        var windParkIntervalConfig = Configuration.GetSection("WindParkInterval");
+        services.ConfigureQuartz(Convert.ToInt32(windParkIntervalConfig["WindParkAggregationFrequencyMinutes"]));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

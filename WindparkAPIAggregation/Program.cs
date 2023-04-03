@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using WindparkAPIAggregation.MigrationManager;
+using WindParkAPIAggregation.MigrationManager;
 
-namespace WindparkAPIAggregation;
+namespace WindParkAPIAggregation;
 
 public class Program
 {

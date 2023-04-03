@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Contracts.Models;
-using WindparkAPIAggregation.Interface;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Contracts.Models;
+using WindParkAPIAggregation.Interface;
 
-namespace WindparkAPIAggregation.Core;
+namespace WindParkAPIAggregation.Core;
 
 public class MemoryOperation : IMemoryOperation
 {

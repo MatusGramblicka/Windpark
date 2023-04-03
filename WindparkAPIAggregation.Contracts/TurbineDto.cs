@@ -1,4 +1,4 @@
-﻿namespace WindparkAPIAggregation.Contracts;
+﻿namespace WindParkAPIAggregation.Contracts;
 
 public class TurbineDto
 {

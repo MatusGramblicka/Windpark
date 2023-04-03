@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WindparkAPIAggregation.Contracts;
+namespace WindParkAPIAggregation.Contracts;
 
 public class WindParkAggregated
 {

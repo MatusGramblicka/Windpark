@@ -4,12 +4,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Interface;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Interface;
 
-namespace WindparkAPIAggregation.Core;
+namespace WindParkAPIAggregation.Core;
 
-public class WindParkClient : IWindparkClient
+public class WindParkClient : IWindParkClient
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<WindParkClient> _logger;
@@ -18,8 +18,8 @@ public class WindParkClient : IWindparkClient
 
     private const string PartialUri = "api/Site";
 
-    public WindParkClient(HttpClient httpClient,
-        ILogger<WindParkClient> logger, IMemoryOperation memoryOperation, IDatabaseOperation databaseOperation)
+    public WindParkClient(HttpClient httpClient, ILogger<WindParkClient> logger, IMemoryOperation memoryOperation,
+        IDatabaseOperation databaseOperation)
     {
         _httpClient = httpClient;
         _logger = logger;

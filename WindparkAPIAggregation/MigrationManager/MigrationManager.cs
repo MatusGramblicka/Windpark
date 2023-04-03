@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using WindparkAPIAggregation.Repository;
+using WindParkAPIAggregation.Repository;
 
-namespace WindparkAPIAggregation.MigrationManager;
+namespace WindParkAPIAggregation.MigrationManager;
 
 public static class MigrationManager
 {

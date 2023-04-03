@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WindparkAPIAggregation.Repository;
+using WindParkAPIAggregation.Repository;
 
 #nullable disable
 
-namespace WindparkAPIAggregation.Migrations
+namespace WindParkAPIAggregation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace WindparkAPIAggregation.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WindparkAPIAggregation.Contracts.Turbine", b =>
+            modelBuilder.Entity("WindParkAPIAggregation.Contracts.Turbine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace WindparkAPIAggregation.Migrations
                     b.ToTable("Turbine");
                 });
 
-            modelBuilder.Entity("WindparkAPIAggregation.Contracts.WindPark", b =>
+            modelBuilder.Entity("WindParkAPIAggregation.Contracts.WindPark", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,9 +65,9 @@ namespace WindparkAPIAggregation.Migrations
                     b.ToTable("WindPark");
                 });
 
-            modelBuilder.Entity("WindparkAPIAggregation.Contracts.Turbine", b =>
+            modelBuilder.Entity("WindParkAPIAggregation.Contracts.Turbine", b =>
                 {
-                    b.HasOne("WindparkAPIAggregation.Contracts.WindPark", "WindPark")
+                    b.HasOne("WindParkAPIAggregation.Contracts.WindPark", "WindPark")
                         .WithMany("Turbines")
                         .HasForeignKey("WindParkId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -76,7 +76,7 @@ namespace WindparkAPIAggregation.Migrations
                     b.Navigation("WindPark");
                 });
 
-            modelBuilder.Entity("WindparkAPIAggregation.Contracts.WindPark", b =>
+            modelBuilder.Entity("WindParkAPIAggregation.Contracts.WindPark", b =>
                 {
                     b.Navigation("Turbines");
                 });

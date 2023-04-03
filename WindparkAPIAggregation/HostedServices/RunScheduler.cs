@@ -3,27 +3,27 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Interface;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Interface;
 
-namespace WindparkAPIAggregation.HostedServices;
+namespace WindParkAPIAggregation.HostedServices;
 
 public class RunScheduler : BackgroundService
 {
-    private readonly IWindparkClient _windParkClient;
+    private readonly IWindParkClient _windParkClient;
 
-    private readonly WindparkIntervalConfiguration _windParkIntervalConfiguration;
+    private readonly WindParkIntervalConfiguration _windParkIntervalConfiguration;
 
-    public RunScheduler(IOptions<WindparkIntervalConfiguration> windParkIntervalConfiguration,
-        IWindparkClient windparkClient)
+    public RunScheduler(IOptions<WindParkIntervalConfiguration> windParkIntervalConfiguration,
+        IWindParkClient windParkClient)
     {
-        _windParkClient = windparkClient;
+        _windParkClient = windParkClient;
         _windParkIntervalConfiguration = windParkIntervalConfiguration.Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(_windParkIntervalConfiguration.WindparkApiFrequencySeconds));
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(_windParkIntervalConfiguration.WindParkApiFrequencySeconds));
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             await _windParkClient.GetData();

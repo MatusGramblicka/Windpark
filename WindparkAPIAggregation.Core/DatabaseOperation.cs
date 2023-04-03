@@ -1,43 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Contracts.Models;
-using WindparkAPIAggregation.Interface;
-using WindparkAPIAggregation.Repository;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Contracts.Models;
+using WindParkAPIAggregation.Interface;
 
-namespace WindparkAPIAggregation.Core;
+namespace WindParkAPIAggregation.Core;
 
 public class DatabaseOperation : IDatabaseOperation
 {
     private readonly ILogger<DatabaseOperation> _logger;
-    private readonly AppDbContext _context;
+    private readonly IRepositoryManager _repositoryManager;
 
-    public DatabaseOperation(
-        ILogger<DatabaseOperation> logger, IServiceScopeFactory serviceScopeFactory)
+    public DatabaseOperation(ILogger<DatabaseOperation> logger, IRepositoryManager repositoryManager)
     {
         _logger = logger;
-
-        var scope = serviceScopeFactory.CreateScope();
-        _context = scope.ServiceProvider.GetService<AppDbContext>();
+        _repositoryManager = repositoryManager;
     }
 
-    
     public async Task<AggregatedData> GetAggregatedDataFromDb()
     {
-        var windParkDb = _context.WindPark.Include(w => w.Turbines);
+        var windParkDb = _repositoryManager.GetWindParks();
 
-        var dataSerialized = JsonConvert.SerializeObject(windParkDb, new JsonSerializerSettings
-        {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        });
-        _logger.LogInformation($"Data from DB: {dataSerialized}");
+        LogWindParkData(windParkDb);
 
         var windParksGroup = windParkDb.GroupBy(w => w.WindParkNumber);
         var windParkAggregated = new List<WindParkAggregated>();
@@ -62,12 +51,12 @@ public class DatabaseOperation : IDatabaseOperation
 
     public async Task SaveToDb(WindParkDto windParkData)
     {
-        var windParkDb = _context.WindPark.Include(w => w.Turbines)
+        var windParkDb = _repositoryManager.GetWindParks()
             .FirstOrDefault(s => s.WindParkNumber.Equals(windParkData.Id));
 
         if (windParkDb == null)
         {
-            _context.WindPark.Add(new WindPark
+            _repositoryManager.AddWindParkAsync(new WindPark
             {
                 WindParkNumber = windParkData.Id,
                 Turbines = windParkData.Turbines.Select(t => new Turbine
@@ -93,7 +82,7 @@ public class DatabaseOperation : IDatabaseOperation
 
         try
         {
-            await _context.SaveChangesAsync();
+            await _repositoryManager.SaveAsync();
         }
         catch (Exception e)
         {
@@ -125,6 +114,15 @@ public class DatabaseOperation : IDatabaseOperation
             }
         }
 
-        await _context.SaveChangesAsync();
+        await _repositoryManager.SaveAsync();
+    }
+
+    private void LogWindParkData(IIncludableQueryable<WindPark, ICollection<Turbine>> windParkDb)
+    {
+        var dataSerialized = JsonConvert.SerializeObject(windParkDb, new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
+        _logger.LogInformation($"Data from DB: {dataSerialized}");
     }
 }

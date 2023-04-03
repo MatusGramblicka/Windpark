@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System;
-using WindparkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Contracts;
 
-namespace WindparkAPIAggregation.Interface;
+namespace WindParkAPIAggregation.Interface;
 
 public interface IMemoryOperation
 {

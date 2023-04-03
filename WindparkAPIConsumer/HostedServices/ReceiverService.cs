@@ -12,9 +12,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Contracts;
 
-namespace WindparkAPIConsumer.HostedServices;
+namespace WindParkAPIConsumer.HostedServices;
 
 public class ReceiverService : BackgroundService
 {

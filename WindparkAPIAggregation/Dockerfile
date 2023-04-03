@@ -6,4 +6,4 @@ WORKDIR /App
 ENV ASPNETCORE_ENVIRONMENT Production
 EXPOSE 3001 
    
-ENTRYPOINT ["dotnet", "WindparkAPIAggregation.dll", "--urls", "http://*:3001"] 
+ENTRYPOINT ["dotnet", "WindParkAPIAggregation.dll", "--urls", "http://*:3001"] 

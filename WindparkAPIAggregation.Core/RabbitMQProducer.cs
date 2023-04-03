@@ -1,16 +1,16 @@
-﻿using System;
-using System.Net.Sockets;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using RabbitMQ.Client;
-using System.Text;
 using Polly;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Interface;
+using System;
+using System.Net.Sockets;
+using System.Text;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Interface;
 
-namespace WindparkAPIAggregation.Core;
+namespace WindParkAPIAggregation.Core;
 
 public class RabbitMqProducer : IMessageProducer
 {
@@ -37,7 +37,10 @@ public class RabbitMqProducer : IMessageProducer
 
         var policy = Policy.Handle<SocketException>().Or<BrokerUnreachableException>()
             .WaitAndRetry(RetryCount, op => TimeSpan.FromSeconds(Math.Pow(2, op)),
-                (ex, time) => { _logger.LogInformation("Couldn't connect to RabbitMQ server."); });
+                (ex, time) =>
+                {
+                    _logger.LogInformation("Couldn't connect to RabbitMQ server.");
+                });
 
         policy.Execute(() => { _connection = factory.CreateConnection(); });
         

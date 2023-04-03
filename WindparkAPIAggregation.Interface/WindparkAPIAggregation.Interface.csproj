@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WindparkAPIAggregation.Contracts\WindparkAPIAggregation.Contracts.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WindParkAPIAggregation.Contracts\WindParkAPIAggregation.Contracts.csproj" />
   </ItemGroup>
 
 

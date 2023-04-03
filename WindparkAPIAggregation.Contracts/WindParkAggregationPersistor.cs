@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using WindparkAPIAggregation.Contracts.Models;
+using WindParkAPIAggregation.Contracts.Models;
 
-namespace WindparkAPIAggregation.Contracts;
+namespace WindParkAPIAggregation.Contracts;
 
 public class WindParkAggregationPersistor
 {

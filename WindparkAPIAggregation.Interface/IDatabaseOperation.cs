@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using WindparkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Contracts;
 
-namespace WindparkAPIAggregation.Interface;
+namespace WindParkAPIAggregation.Interface;
 
 public interface IDatabaseOperation
 {

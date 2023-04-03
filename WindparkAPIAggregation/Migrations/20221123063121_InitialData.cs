@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WindparkAPIAggregation.Migrations
+namespace WindParkAPIAggregation.Migrations
 {
     /// <inheritdoc />
     public partial class InitialData : Migration

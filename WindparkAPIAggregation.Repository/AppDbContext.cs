@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WindparkAPIAggregation.Contracts.Models;
+using WindParkAPIAggregation.Contracts.Models;
 
-namespace WindparkAPIAggregation.Repository;
+namespace WindParkAPIAggregation.Repository;
 
 public class AppDbContext : DbContext
 {

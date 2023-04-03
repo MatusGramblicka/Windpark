@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 
-namespace WindparkAPIConsumer;
+namespace WindParkAPIConsumer;
 
 public class Program
 {

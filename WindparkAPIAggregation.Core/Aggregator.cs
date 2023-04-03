@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIAggregation.Contracts.Models;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIAggregation.Contracts.Models;
 
-namespace WindparkAPIAggregation.Core;
+namespace WindParkAPIAggregation.Core;
 
 public static class Aggregator
 {
