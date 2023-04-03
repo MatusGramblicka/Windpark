@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WindparkAPIAggregation.Contracts\WindparkAPIAggregation.Contracts.csproj" />
-    <ProjectReference Include="..\WindparkAPIAggregation.Interface\WindparkAPIAggregation.Interface.csproj" />
-    <ProjectReference Include="..\WindparkAPIAggregation.Repository\WindparkAPIAggregation.Repository.csproj" />
+    <ProjectReference Include="..\WindParkAPIAggregation.Contracts\WindParkAPIAggregation.Contracts.csproj" />
+    <ProjectReference Include="..\WindParkAPIAggregation.Interface\WindParkAPIAggregation.Interface.csproj" />
+    <ProjectReference Include="..\WindParkAPIAggregation.Repository\WindParkAPIAggregation.Repository.csproj" />
   </ItemGroup>
 
 

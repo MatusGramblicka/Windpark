@@ -1,4 +1,4 @@
-﻿namespace WindparkAPIAggregation.Interface;
+﻿namespace WindParkAPIAggregation.Interface;
 
 public interface IMessageProducer
 {

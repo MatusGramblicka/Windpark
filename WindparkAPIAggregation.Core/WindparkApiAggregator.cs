@@ -3,19 +3,19 @@ using Quartz;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using WindparkAPIAggregation.Interface;
+using WindParkAPIAggregation.Interface;
 
-namespace WindparkAPIAggregation.Core;
+namespace WindParkAPIAggregation.Core;
 
-public class WindparkApiAggregator : IWindparkApiAggregator, IJob
+public class WindParkApiAggregator : IWindParkApiAggregator, IJob
 {
     private readonly IMessageProducer _messagePublisher;
-    private readonly ILogger<WindparkApiAggregator> _logger;
+    private readonly ILogger<WindParkApiAggregator> _logger;
     private readonly IMemoryOperation _memoryOperation;
     private readonly IDatabaseOperation _databaseOperation;
 
-    public WindparkApiAggregator(IMessageProducer messagePublisher,
-        ILogger<WindparkApiAggregator> logger, IMemoryOperation memoryOperation, IDatabaseOperation databaseOperation)
+    public WindParkApiAggregator(IMessageProducer messagePublisher,
+        ILogger<WindParkApiAggregator> logger, IMemoryOperation memoryOperation, IDatabaseOperation databaseOperation)
     {
         _messagePublisher = messagePublisher;
         _logger = logger;

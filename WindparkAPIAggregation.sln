@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation", "WindparkAPIAggregation\WindparkAPIAggregation.csproj", "{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindParkAPIAggregation", "WindparkAPIAggregation\WindParkAPIAggregation.csproj", "{C0B5EA26-5AC1-4E87-B449-B5BD182A042B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Core", "WindparkAPIAggregation.Core\WindparkAPIAggregation.Core.csproj", "{D25B6FC0-80EC-4106-94D4-B475BEB8A721}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindParkAPIAggregation.Core", "WindparkAPIAggregation.Core\WindParkAPIAggregation.Core.csproj", "{D25B6FC0-80EC-4106-94D4-B475BEB8A721}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Interface", "WindparkAPIAggregation.Interface\WindparkAPIAggregation.Interface.csproj", "{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindParkAPIAggregation.Interface", "WindparkAPIAggregation.Interface\WindParkAPIAggregation.Interface.csproj", "{BCB9E9D7-78B2-4A8F-9653-FCFE385E0BA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIAggregation.Contracts", "WindparkAPIAggregation.Contracts\WindparkAPIAggregation.Contracts.csproj", "{C3085EF7-B666-472A-903A-316E7E63DE13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindParkAPIAggregation.Contracts", "WindparkAPIAggregation.Contracts\WindParkAPIAggregation.Contracts.csproj", "{C3085EF7-B666-472A-903A-316E7E63DE13}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindparkAPIConsumer", "WindparkAPIConsumer\WindparkAPIConsumer.csproj", "{555FC636-BC15-4596-A481-21DB79D4DDC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindParkAPIConsumer", "WindparkAPIConsumer\WindParkAPIConsumer.csproj", "{555FC636-BC15-4596-A481-21DB79D4DDC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindparkAPIAggregation.Repository", "WindparkAPIAggregation.Repository\WindparkAPIAggregation.Repository.csproj", "{11A9D189-7803-4E6A-994F-9960FB7BD363}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindParkAPIAggregation.Repository", "WindparkAPIAggregation.Repository\WindParkAPIAggregation.Repository.csproj", "{11A9D189-7803-4E6A-994F-9960FB7BD363}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,8 +25,8 @@ services:
       - rabbitmq
       - sql_server2022
     environment:
-      - WindparkInterval:WindparkApiFrequencySeconds=10
-      - WindparkInterval:WindparkAggregationFrequencyMinutes=1
+      - WindParkInterval:WindParkApiFrequencySeconds=10
+      - WindParkInterval:WindParkAggregationFrequencyMinutes=1
       - RabbitMqSection:HostName=rabbitmq
       - RabbitMqSection:Port=5672
       - RabbitMqSection:Queue=windpark

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace WindparkAPIAggregation.Interface;
+namespace WindParkAPIAggregation.Interface;
 
-public interface IWindparkClient
+public interface IWindParkClient
 {
     Task GetData();
 }

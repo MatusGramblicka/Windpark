@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WindparkAPIAggregation.Contracts.Models;
+namespace WindParkAPIAggregation.Contracts.Models;
 
 public class WindPark
 {

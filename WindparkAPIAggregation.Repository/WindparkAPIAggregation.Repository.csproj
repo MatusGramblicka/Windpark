@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WindparkAPIAggregation.Contracts\WindparkAPIAggregation.Contracts.csproj" />
+    <ProjectReference Include="..\WindParkAPIAggregation.Contracts\WindParkAPIAggregation.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

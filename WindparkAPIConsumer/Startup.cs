@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WindparkAPIAggregation.Contracts;
-using WindparkAPIConsumer.HostedServices;
+using WindParkAPIAggregation.Contracts;
+using WindParkAPIConsumer.HostedServices;
 
-namespace WindparkAPIConsumer;
+namespace WindParkAPIConsumer;
 
 public class Startup
 {
