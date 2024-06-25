@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HostedServices\" />
     <Folder Include="Extensions\" />
     <Folder Include="MigrationManager\" />
   </ItemGroup>

@@ -10,7 +10,7 @@ services:
       - 5672:5672
       - 15672:15672
 
-  sql:
+  sqlserver:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     container_name: sql_server2022
     ports: # not actually needed, because the two services are on the same network.
@@ -23,7 +23,7 @@ services:
     image: windparkdemo:latest
     depends_on:
       - rabbitmq
-      - sql_server2022
+      - sqlserver
     environment:
       - WindParkInterval:WindParkApiFrequencySeconds=10
       - WindParkInterval:WindParkAggregationFrequencyMinutes=1
@@ -31,15 +31,21 @@ services:
       - RabbitMqSection:Port=5672
       - RabbitMqSection:Queue=windpark
       - RabbitMqSection:RoutingKey=windpark
-      - Logging:LogLevel:Default=Information
+      - Logging:LogLevel:Default=Trace
       - Logging:LogLevel:System=Information
       - Logging:LogLevel:Microsoft=Information
-    
+    logging:
+      driver: json-file
+      options:
+        max-file: 5
+        max-size: 100m
+        mode: non-blocking
+
   windparkapiconsumer:
     image: windparkapiconsumer:latest
     depends_on:
       - rabbitmq
-      - sql_server2022
+      - sqlserver
     environment:     
       - RabbitMqSection:HostName=rabbitmq
       - RabbitMqSection:Port=5672

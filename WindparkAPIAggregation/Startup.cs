@@ -28,15 +28,14 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IWindParkApiAggregator, WindParkApiAggregator>();
+        //services.AddScoped<IWindParkApiAggregator, WindParkApiAggregator>();
         services.AddSingleton<IMessageProducer, RabbitMqProducer>();
-        services.AddSingleton<WindParkAggregationPersistor>();
-        services.AddSingleton<IMemoryOperation, MemoryOperation>();
-        services.AddSingleton<IDatabaseOperation, DatabaseOperation>();
+        services.AddScoped<IDatabaseOperation, DatabaseOperation>();
 
         services.AddLogging();
 
-        services.AddHostedService<RunScheduler>();
+        services.AddHostedService<WindParkDataGetterHost>();
+        services.AddHostedService<WindParkDataAggregator>();
 
         services.AddHttpClient<IWindParkClient, WindParkClient>("WindParkAPI",
             (s, c) => { c.BaseAddress = new Uri(Configuration.GetValue<string>("WindParkApi:BaseAddress")); });
@@ -56,8 +55,8 @@ public class Startup
             opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection"),
                 b => b.MigrationsAssembly("WindParkAPIAggregation")));
 
-        var windParkIntervalConfig = Configuration.GetSection("WindParkInterval");
-        services.ConfigureQuartz(Convert.ToInt32(windParkIntervalConfig["WindParkAggregationFrequencyMinutes"]));
+        //var windParkIntervalConfig = Configuration.GetSection("WindParkInterval");
+        //services.ConfigureQuartz(Convert.ToInt32(windParkIntervalConfig["WindParkAggregationFrequencyMinutes"]));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

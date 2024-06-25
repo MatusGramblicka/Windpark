@@ -86,7 +86,7 @@ public class DatabaseOperation : IDatabaseOperation
         }
         catch (Exception e)
         {
-            _logger.LogInformation($"Exception when saving to db {e}");
+            _logger.LogError($"Exception when saving to db {e}");
             throw;
         }
     }
@@ -98,23 +98,24 @@ public class DatabaseOperation : IDatabaseOperation
             var aggregatedTurbineFlattenedIds = windPark.Turbines.Select(t => t.Id).ToList();
             _logger.LogInformation($"count db elements before deletion: {aggregatedTurbineFlattenedIds.Count}");
 
-            foreach (var aggregatedTurbineFlattenedId in aggregatedTurbineFlattenedIds)
+            foreach (var turbine in aggregatedTurbineFlattenedIds
+                         .Select(aggregatedTurbineFlattenedId =>
+                             windPark.Turbines.SingleOrDefault(t => t.Id == aggregatedTurbineFlattenedId))
+                         .Where(turbine => turbine != null))
             {
-                try
-                {
-                    var turbine
-                        = windPark.Turbines.Single(t => t.Id == aggregatedTurbineFlattenedId);
-                    windPark.Turbines.Remove(turbine);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"DB removal operation failed: {ex}");
-                    throw;
-                }
+                windPark.Turbines.Remove(turbine);
             }
         }
 
-        await _repositoryManager.SaveAsync();
+        try
+        {
+            await _repositoryManager.SaveAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"DB removal operation failed: {ex}");
+            throw;
+        }
     }
 
     private void LogWindParkData(IIncludableQueryable<WindPark, ICollection<Turbine>> windParkDb)

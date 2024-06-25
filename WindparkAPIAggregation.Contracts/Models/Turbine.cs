@@ -13,4 +13,5 @@ public class Turbine
     [ForeignKey(nameof(WindPark))]
     public Guid WindParkId { get; set; }
     public WindPark WindPark { get; set; }
+    public SupportPerson SupportPerson { get; set; }
 }

@@ -8,13 +8,13 @@ using WindParkAPIAggregation.Interface;
 
 namespace WindParkAPIAggregation.HostedServices;
 
-public class RunScheduler : BackgroundService
+public class WindParkDataGetterHost : BackgroundService
 {
     private readonly IWindParkClient _windParkClient;
 
     private readonly WindParkIntervalConfiguration _windParkIntervalConfiguration;
 
-    public RunScheduler(IOptions<WindParkIntervalConfiguration> windParkIntervalConfiguration,
+    public WindParkDataGetterHost(IOptions<WindParkIntervalConfiguration> windParkIntervalConfiguration,
         IWindParkClient windParkClient)
     {
         _windParkClient = windParkClient;
@@ -26,7 +26,7 @@ public class RunScheduler : BackgroundService
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(_windParkIntervalConfiguration.WindParkApiFrequencySeconds));
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
-            await _windParkClient.GetData();
+            await _windParkClient.GetWindParkData();
         }
     }
 }

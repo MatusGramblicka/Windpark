@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using WindParkAPIAggregation.Repository;
 
@@ -12,13 +13,15 @@ public static class MigrationManager
     {
         using var scope = host.Services.CreateScope();
         using var appContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+        
         try
         {
             appContext.Database.Migrate();
         }
         catch (Exception ex)
         {
-            //Log errors or do anything you think it's needed
+            logger.LogInformation($"Migration was not successful: {ex}");
             throw;
         }
 

@@ -4,5 +4,5 @@ namespace WindParkAPIAggregation.Interface;
 
 public interface IWindParkClient
 {
-    Task GetData();
+    Task GetWindParkData();
 }

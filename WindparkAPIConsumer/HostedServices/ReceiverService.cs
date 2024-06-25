@@ -32,6 +32,7 @@ public class ReceiverService : BackgroundService
     {
         _logger = logger;
         _rabbitMqConfiguration = rabbitMqConfiguration.Value;
+
         var factory = new ConnectionFactory
         {
             HostName = _rabbitMqConfiguration.HostName,
